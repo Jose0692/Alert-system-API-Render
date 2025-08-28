@@ -33,10 +33,6 @@ async def read_root():
 async def get_dashboard():
     return FileResponse("templates/dashboard.html")
 
-@app.get("/servicio/{nombre}")
-def levantar_servicio(nombre: str):
-    return {"servicio": nombre, "estado": "levantado"}
-
 @app.get("/favicon.ico")
 def favicon():
     return FileResponse(os.path.join("static", "favicon.ico"))
