@@ -1,0 +1,120 @@
+from pydantic import BaseModel
+from typing import Optional
+from datetime import date, datetime
+
+class PaisBase(BaseModel):
+    nombre: str
+
+class PaisCreate(PaisBase):
+    pass
+
+class Pais(PaisBase):
+    id_pais: int
+
+    class Config:
+        from_attributes = True
+
+class ZonaBase(BaseModel):
+    nombre_zona: str
+    id_pais: int
+
+class ZonaCreate(ZonaBase):
+    pass
+
+class Zona(ZonaBase):
+    id_zona: int
+
+    class Config:
+        from_attributes = True
+
+
+class CineBase(BaseModel):
+    nombre_cine: str
+    ubicacion_cine: Optional[str] = None
+    id_zona: int
+
+class CineCreate(CineBase):
+    pass
+
+class Cine(CineBase):
+    id_cine: int
+
+    class Config:
+        from_attributes = True
+
+
+class SalaBase(BaseModel):
+    numero_sala: int
+    capacidad_sala: Optional[int] = None
+    id_cine: int
+
+class SalaCreate(SalaBase):
+    pass
+
+class Sala(SalaBase):
+    id_sala: int
+
+    class Config:
+        from_attributes = True
+
+# ---------- CATEGORIA EQUIPO ----------
+class CategoriaEquipoBase(BaseModel):
+    nombre_categoria_equipo: str
+
+
+class CategoriaEquipoCreate(CategoriaEquipoBase):
+    pass
+
+
+class CategoriaEquipo(CategoriaEquipoBase):
+    id_categoria_equipo: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------- EQUIPO ----------
+class EquipoBase(BaseModel):
+    nombre_equipo: str
+    marca_equipo: Optional[str] = None
+    modelo_equipo: Optional[str] = None
+    ip_equipo: Optional[str] = None
+    fecha_mantenimiento_equipo: Optional[date] = None
+    fecha_instalacion_equipo: Optional[date] = None
+    id_sala: int
+    id_categoria_equipo: int
+
+
+class EquipoCreate(EquipoBase):
+    pass
+
+
+class Equipo(EquipoBase):
+    id_equipo: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------- ALERTA ----------
+class AlertaBase(BaseModel):
+    tipo_alerta: Optional[str] = None
+    mensaje_alerta: Optional[str] = None
+    criticidad_alerta: Optional[str] = None
+    fecha_hora_alerta: Optional[datetime] = None
+    estado_alerta: Optional[str] = None
+    codigo_alerta: Optional[str] = None
+    showstopper_alerta: Optional[str] = None
+    silencio_alerta: Optional[str] = None
+    id_equipo: int
+
+
+class AlertaCreate(AlertaBase):
+    pass
+
+
+class Alerta(AlertaBase):
+    id_alerta: int
+
+    class Config:
+        from_attributes = True
