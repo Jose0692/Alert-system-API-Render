@@ -70,5 +70,6 @@ class Alerta(Base):
     codigo_alerta = Column(String(50))
     showstopper_alerta = Column(String(100))
     silencio_alerta = Column(String(100))
+    maintenence_alert = Column(String(100))
     id_equipo = Column(Integer, ForeignKey("equipos.id_equipo", ondelete="CASCADE"), nullable=False)
     equipo = relationship("Equipo", back_populates="alertas")

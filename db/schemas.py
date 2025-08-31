@@ -107,6 +107,7 @@ class AlertaBase(BaseModel):
     codigo_alerta: Optional[str] = None
     showstopper_alerta: Optional[str] = None
     silencio_alerta: Optional[str] = None
+    maintenence_alert: Optional[str] = None
     id_equipo: int
 
 

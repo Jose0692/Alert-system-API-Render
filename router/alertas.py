@@ -16,7 +16,3 @@ def get_alertas_por_equipo(equipo_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=schemas.Alerta)
 def create_alerta(alerta: schemas.AlertaCreate, db: Session = Depends(get_db)):
     return crud.create_alerta(db, alerta)
-
-@router.get("/error/count")
-def get_alertas_error_count(db: Session = Depends(get_db)):
-    return {"total_error": crud.get_numero_alertas_error(db)}

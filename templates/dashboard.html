@@ -352,7 +352,37 @@
         .cinemas-content {
             flex: 1;
             overflow-y: auto;
+            max-height: 390px;
+            padding-right: 6px;
         }
+
+        /* Scrollbar minimalista */
+        .cinemas-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .cinemas-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .cinemas-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .cinemas-content::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        /* Firefox */
+        .cinemas-content {
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
+        }
+
+        /* Scrollbar minimalista */
 
         .cinema-item {
             display: flex;
@@ -603,57 +633,9 @@
             <div class="dashboard-content">
                 <!-- Panel de Notificaciones -->
                 <div class="notifications-panel">
-                    <h3 class="section-title">MANTENIMIENTOS</h3>
-                    <div class="panel-content">
-                        <div class="notification-item">
-                            <div class="notification-header">
-                                <span class="notification-complex">Sistema</span>
-                                <span class="notification-room">Actualización</span>
-                            </div>
-                            <div class="notification-details">
-                                <span class="notification-type info">Nueva película agregada</span>
-                            </div>
-                        </div>
-                        
-                        <div class="notification-item">
-                            <div class="notification-header">
-                                <span class="notification-complex">Sistema</span>
-                                <span class="notification-room">Mantenimiento</span>
-                            </div>
-                            <div class="notification-details">
-                                <span class="notification-type success">Sistema actualizado</span>
-                            </div>
-                        </div>
-
-                         <div class="notification-item">
-                            <div class="notification-header">
-                                <span class="notification-complex">Sistema</span>
-                                <span class="notification-room">Mantenimiento</span>
-                            </div>
-                            <div class="notification-details">
-                                <span class="notification-type success">Sistema actualizado</span>
-                            </div>
-                        </div>
-
-                         <div class="notification-item">
-                            <div class="notification-header">
-                                <span class="notification-complex">Sistema</span>
-                                <span class="notification-room">Mantenimiento</span>
-                            </div>
-                            <div class="notification-details">
-                                <span class="notification-type success">Sistema actualizado</span>
-                            </div>
-                        </div>
-                        
-                        <div class="notification-item">
-                            <div class="notification-header">
-                                <span class="notification-complex">Miraflores</span>
-                                <span class="notification-room">Taquilla</span>
-                            </div>
-                            <div class="notification-details">
-                                <span class="notification-type alert">Alta demanda de entradas</span>
-                            </div>
-                        </div>
+                    <h3 class="section-title">NOTIFICACIONES</h3>
+                    <div class="panel-content" id="notifications-container">
+                        <!-- Aquí se insertarán dinámicamente las notificaciones -->
                     </div>
                     <button class="view-all-btn">View All</button>
                 </div>
@@ -664,13 +646,10 @@
                     <div id="cinemas-container" class="cinemas-content"></div>
                 </div>
 
-                <!-- Panel de Mapa -->
-                <div class="map-container">
-                    <h3 class="map-title">ALCANCE</h3>
-                    <div class="map-content" style="justify-content:center; align-items:center;">
                     <img src="/static/mapa.png" alt="Mapa de Perú y Chile" 
                         style="max-width:320px; height:auto; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.15);" />
-                </div>
+                
+                    </div>
                 </div>
             </div>
         </div>
@@ -824,6 +803,103 @@
     // Opcional: refrescar cada 30 segundos
     setInterval(cargarAlertas, 30000);
     </script>
+
+    <script>
+        const API_ALERTAS2 = "http://localhost:8000/alertas/";
+        const API_EQUIPOS2 = "http://localhost:8000/equipos/";
+        const API_SALAS2   = "http://localhost:8000/salas/";
+        const API_CINES2   = "http://localhost:8000/cines/";
+
+        async function cargarNotificaciones() {
+            try {
+                const [alertasRes, equiposRes, salasRes, cinesRes] = await Promise.all([
+                    fetch(API_ALERTAS2),
+                    fetch(API_EQUIPOS2),
+                    fetch(API_SALAS2),
+                    fetch(API_CINES2)
+                ]);
+
+                const alertas = await alertasRes.json();
+                const equipos = await equiposRes.json();
+                const salas = await salasRes.json();
+                const cines = await cinesRes.json();
+
+                // Crear mapas para búsquedas rápidas
+                const salaPorId = {};
+                salas.forEach(s => salaPorId[s.id_sala] = s);
+
+                const cinePorId = {};
+                cines.forEach(c => cinePorId[c.id_cine] = c);
+
+                const equipoPorId = {};
+                equipos.forEach(eq => equipoPorId[eq.id_equipo] = eq);
+
+                // Filtrar solo notificaciones
+                const notificaciones = alertas.filter(a => a.tipo_alerta.toLowerCase() === "notification");
+
+                const container = document.getElementById("notifications-container");
+                container.innerHTML = "";
+
+                notificaciones.forEach(alerta => {
+                    const eq = equipoPorId[alerta.id_equipo];
+                    const sala = eq ? salaPorId[eq.id_sala] : null;
+                    const cine = sala ? cinePorId[sala.id_cine] : null;
+
+                    const notificationItem = document.createElement("div");
+                    notificationItem.className = "notification-item";
+
+                    // Arriba: cine y sala
+                    const header = document.createElement("div");
+                    header.className = "notification-header";
+
+                    const complex = document.createElement("span");
+                    complex.className = "notification-complex";
+                    if (cine && sala) {
+                        complex.textContent = `${cine.nombre_cine} - Sala ${sala.numero_sala}`;
+                    } else {
+                        complex.textContent = "Desconocido";
+                    }
+
+                    const room = document.createElement("span");
+                    room.className = "notification-room";
+
+                    // Mostrar columna maintenance (ejemplo: "Mantenimiento" o "Lampara")
+                    if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "mantenimiento") {
+                        room.textContent = "Mantenimiento";
+                    } else if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "lampara") {
+                        room.textContent = "Lámpara";
+                    } else {
+                        room.textContent = "Otro";
+                    }
+
+                    header.appendChild(complex);
+                    header.appendChild(room);
+
+                    // Abajo: mensaje de la alerta
+                    const details = document.createElement("div");
+                    details.className = "notification-details";
+
+                    const type = document.createElement("span");
+                    type.className = "notification-type info";
+                    type.textContent = alerta.mensaje_alerta;
+
+                    details.appendChild(type);
+
+                    notificationItem.appendChild(header);
+                    notificationItem.appendChild(details);
+                    container.appendChild(notificationItem);
+                });
+
+            } catch (error) {
+                console.error("Error cargando notificaciones:", error);
+            }
+        }
+
+        // Cargar al inicio
+        cargarNotificaciones();
+        // Opcional refrescar cada 1 min
+        setInterval(cargarNotificaciones, 60000);
+        </script>
 
 </body>
 </html>
