@@ -192,17 +192,16 @@
         }
 
         .showstopper-btn {
-            background: linear-gradient(45deg, #2c2c2c, #000000); /* Gris oscuro a negro */
+            background: linear-gradient(45deg, var(--danger-color), #c0392b);
         }
 
         .error-btn {
-            background: linear-gradient(45deg, #e74c3c, #b71c1c); /* Rojo intenso */
+            background: linear-gradient(45deg, var(--warning-color), #e67e22);
         }
 
         .warning-btn {
-            background: linear-gradient(45deg, #f1c40f, #f39c12); /* Amarillo a dorado */
+            background: linear-gradient(45deg, var(--info-color), #16a085);
         }
-
 
         .alert-count {
             background-color: white;
@@ -543,7 +542,7 @@
                     <i class="bi bi-speedometer2"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <!--<a href="#" class="nav-item">
+                <a href="#" class="nav-item">
                     <i class="bi bi-bar-chart"></i>
                     <span class="nav-text">Estadísticas</span>
                 </a>
@@ -569,7 +568,7 @@
                 <a href="#" class="nav-item">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="nav-text">Cerrar Sesión</span>
-                </a>-->
+                </a>
             </div>
         </div>
 
@@ -580,23 +579,23 @@
                 <div class="alert-buttons">
                     <div class="alert-btn showstopper-btn">
                         <i class="bi bi-exclamation-triangle"></i>&nbsp; Showstopper
-                        <span class="alert-count" id="showstopper-count">0</span>
+                        <span class="alert-count">3</span>
                     </div>
                     <div class="alert-btn error-btn">
                         <i class="bi bi-exclamation-circle"></i>&nbsp; Error
-                        <span class="alert-count" id="error-count">0</span>
+                        <span class="alert-count">7</span>
                     </div>
                     <div class="alert-btn warning-btn">
                         <i class="bi bi-info-circle"></i>&nbsp; Warning
-                        <span class="alert-count" id="warning-count">0</span>
+                        <span class="alert-count">12</span>
                     </div>
                 </div>
                 
-                <!--<div class="user-panel">
+                <div class="user-panel">
                     <div class="user-btn">
                         <i class="bi bi-person"></i>
                     </div>
-                </div>-->
+                </div>
             </div>
 
             <!-- Contenido del Dashboard -->
@@ -661,7 +660,78 @@
                 <!-- Lista de Cines -->
                 <div class="cinema-list">
                     <h3 class="section-title">LISTA DE CINES CON ALERTAS</h3>
-                    <div id="cinemas-container" class="cinemas-content"></div>
+                    <div class="cinemas-content">
+                        <div class="cinema-item">
+                            <div class="cinema-name">Mall del Sur</div>
+                            <div class="squares-container">
+                                <div class="squares-row">
+                                    <div class="square green">1</div>
+                                    <div class="square green">2</div>
+                                    <div class="square red">3</div>
+                                    <div class="square yellow">4</div>
+                                    <div class="square green">5</div>
+                                    <div class="square blue">6</div>
+                                    <div class="square green">7</div>
+                                    <div class="square green">8</div>
+                                    <div class="square gray">9</div>
+                                    <div class="square green">10</div>
+                                </div>
+                                <div class="squares-row">
+                                    <div class="square green">11</div>
+                                    <div class="square gray">12</div>
+                                    <div class="square green">13</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cinema-item">
+                            <div class="cinema-name">Santa Catalina</div>
+                            <div class="squares-container">
+                                <div class="squares-row">
+                                    <div class="square green">1</div>
+                                    <div class="square green">2</div>
+                                    <div class="square green">3</div>
+                                    <div class="square black">4</div>
+                                    <div class="square yellow">5</div>
+                                    <div class="square green">6</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cinema-item">
+                            <div class="cinema-name">Primavera</div>
+                            <div class="squares-container">
+                                <div class="squares-row">
+                                    <div class="square green">1</div>
+                                    <div class="square yellow">2</div>
+                                    <div class="square yellow">3</div>
+                                    <div class="square red">4</div>
+                                    <div class="square green">5</div>
+                                    <div class="square green">6</div>
+                                    <div class="square blue">7</div>
+                                    <div class="square green">8</div>
+                                    <div class="square green">9</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cinema-item">
+                            <div class="cinema-name">Alcazar</div>
+                            <div class="squares-container">
+                                <div class="squares-row">
+                                    <div class="square green">1</div>
+                                    <div class="square green">2</div>
+                                    <div class="square green">3</div>
+                                    <div class="square green">4</div>
+                                    <div class="square green">5</div>
+                                    <div class="square green">6</div>
+                                    <div class="square green">7</div>
+                                    <div class="square green">8</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="view-all-btn">View All</button>
                 </div>
 
                 <!-- Panel de Mapa -->
@@ -690,140 +760,5 @@
             });
         });
     </script>
-
-
-    <script>
-    const API_CINES   = "http://localhost:8000/cines/";     // endpoint de cines
-    const API_SALAS   = "http://localhost:8000/salas/";     // endpoint de salas
-    const API_EQUIPOS = "http://localhost:8000/equipos/";   // endpoint de equipos
-    const API_ALERTAS = "http://localhost:8000/alertas/";   // endpoint de alertas
-
-    async function fetchData() {
-        // 1. Obtener todo
-        const [cinesRes, salasRes, equiposRes, alertasRes] = await Promise.all([
-            fetch(API_CINES),
-            fetch(API_SALAS),
-            fetch(API_EQUIPOS),
-            fetch(API_ALERTAS)
-        ]);
-
-        const cines   = await cinesRes.json();
-        const salas   = await salasRes.json();
-        const equipos = await equiposRes.json();
-        const alertas = await alertasRes.json();
-
-        // 2. Crear mapa de equipos por sala
-        const equiposPorSala = {};
-        equipos.forEach(eq => {
-            if (!equiposPorSala[eq.id_sala]) equiposPorSala[eq.id_sala] = [];
-            equiposPorSala[eq.id_sala].push(eq);
-        });
-
-        // 3. Crear mapa de alertas por equipo
-        const alertasPorEquipo = {};
-        alertas.forEach(al => {
-            if (!alertasPorEquipo[al.id_equipo]) alertasPorEquipo[al.id_equipo] = [];
-            alertasPorEquipo[al.id_equipo].push(al);
-        });
-
-        // 4. Pintar en el DOM
-        const container = document.getElementById("cinemas-container");
-        container.innerHTML = "";
-
-        cines.forEach(cine => {
-            const cineDiv = document.createElement("div");
-            cineDiv.className = "cinema-item";
-
-            const cineName = document.createElement("div");
-            cineName.className = "cinema-name";
-            cineName.textContent = cine.nombre_cine;
-            cineDiv.appendChild(cineName);
-
-            const squaresContainer = document.createElement("div");
-            squaresContainer.className = "squares-container";
-            const row = document.createElement("div");
-            row.className = "squares-row";
-
-            // Buscar salas de este cine
-            const salasDelCine = salas.filter(s => s.id_cine === cine.id_cine);
-
-            salasDelCine.forEach(sala => {
-                const square = document.createElement("div");
-                square.className = "square";
-
-                // Buscar equipos de la sala
-                const eqs = equiposPorSala[sala.id_sala] || [];
-                let color = "green"; // por defecto
-
-               eqs.forEach(eq => {
-                    const als = alertasPorEquipo[eq.id_equipo] || [];
-
-                    if (als.some(a => a.showstopper_alerta.toLowerCase() === "si")) {
-                        color = "black";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "error")) {
-                        color = "red";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "warning")) {
-                        color = "yellow";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "notification")) {
-                        color = "blue";
-                    }
-                });
-
-                square.classList.add(color);
-                square.textContent = sala.numero_sala;
-                row.appendChild(square);
-            });
-
-            squaresContainer.appendChild(row);
-            cineDiv.appendChild(squaresContainer);
-            container.appendChild(cineDiv);
-        });
-    }
-
-    // Actualizar cada 3 segundos
-    fetchData();
-    setInterval(fetchData, 3000);
-    </script>
-
-    <script>
-    async function cargarAlertas() {
-        try {
-            const response = await fetch("http://localhost:8000/alertas/");
-            const alertas = await response.json();
-
-            let showstopper = 0;
-            let errores = 0;
-            let warnings = 0;
-
-            alertas.forEach(alerta => {
-                if (alerta.showstopper_alerta === "Si") {
-                    // Si es showstopper, lo contamos aparte y no suma a error/warning
-                    showstopper++;
-                } else {
-                    if (alerta.tipo_alerta.toLowerCase() === "error") {
-                        errores++;
-                    } else if (alerta.tipo_alerta.toLowerCase() === "warning") {
-                        warnings++;
-                    }
-                }
-            });
-
-            // Actualizamos en el HTML
-            document.getElementById("showstopper-count").textContent = showstopper;
-            document.getElementById("error-count").textContent = errores;
-            document.getElementById("warning-count").textContent = warnings;
-
-        } catch (error) {
-            console.error("Error cargando alertas:", error);
-        }
-    }
-
-    // Cargar al inicio
-    cargarAlertas();
-
-    // Opcional: refrescar cada 30 segundos
-    setInterval(cargarAlertas, 30000);
-    </script>
-
 </body>
 </html>

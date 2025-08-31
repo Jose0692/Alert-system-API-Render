@@ -8,6 +8,7 @@ Base = declarative_base()
 class Pais(Base):
     __tablename__ = "paises"
     id_pais = Column(Integer, primary_key=True, index=True)
+    num_cine = Column(Integer, nullable=False)
     nombre_pais = Column(String(100), nullable=False)
     zonas = relationship("Zona", back_populates="pais", cascade="all, delete")
 

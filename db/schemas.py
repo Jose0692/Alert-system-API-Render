@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import date, datetime
 
 class PaisBase(BaseModel):
+    num_cine: int 
     nombre: str
 
 class PaisCreate(PaisBase):
