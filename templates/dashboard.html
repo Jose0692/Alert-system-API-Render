@@ -734,19 +734,27 @@
                 const eqs = equiposPorSala[sala.id_sala] || [];
                 let color = "green"; // por defecto
 
-               eqs.forEach(eq => {
+                for (const eq of eqs) {
                     const als = alertasPorEquipo[eq.id_equipo] || [];
 
-                    if (als.some(a => a.showstopper_alerta.toLowerCase() === "si")) {
+                    if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                    a.showstopper_alerta?.toLowerCase() === "si")) {
                         color = "black";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "error")) {
+                        break; // prioridad máxima
+                    } 
+                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                        a.tipo_alerta?.toLowerCase() === "error")) {
                         color = "red";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "warning")) {
+                    } 
+                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                        a.tipo_alerta?.toLowerCase() === "warning")) {
                         color = "yellow";
-                    } else if (als.some(a => a.tipo_alerta.toLowerCase() === "notification")) {
+                    } 
+                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                        a.tipo_alerta?.toLowerCase() === "notification")) {
                         color = "blue";
                     }
-                });
+                }
 
                 square.classList.add(color);
                 square.textContent = sala.numero_sala;
@@ -764,7 +772,8 @@
     setInterval(fetchData, 3000);
     </script>
 
-    <script>
+
+   <script>
     async function cargarAlertas() {
         try {
             const response = await fetch("http://localhost:8000/alertas/");
@@ -775,14 +784,17 @@
             let warnings = 0;
 
             alertas.forEach(alerta => {
-                if (alerta.showstopper_alerta === "Si") {
-                    // Si es showstopper, lo contamos aparte y no suma a error/warning
-                    showstopper++;
-                } else {
-                    if (alerta.tipo_alerta.toLowerCase() === "error") {
-                        errores++;
-                    } else if (alerta.tipo_alerta.toLowerCase() === "warning") {
-                        warnings++;
+                // Solo contar alertas con estado "activo"
+                if (alerta.estado_alerta.toLowerCase() === "activo") {
+                    if (alerta.showstopper_alerta === "Si") {
+                        // Si es showstopper, lo contamos aparte y no suma a error/warning
+                        showstopper++;
+                    } else {
+                        if (alerta.tipo_alerta.toLowerCase() === "error") {
+                            errores++;
+                        } else if (alerta.tipo_alerta.toLowerCase() === "warning") {
+                            warnings++;
+                        }
                     }
                 }
             });
@@ -800,9 +812,9 @@
     // Cargar al inicio
     cargarAlertas();
 
-    // Opcional: refrescar cada 30 segundos
-    setInterval(cargarAlertas, 30000);
-    </script>
+    // Opcional: refrescar cada 3 segundos
+    setInterval(cargarAlertas, 3000);
+</script>
 
     <script>
         const API_ALERTAS2 = "http://localhost:8000/alertas/";
@@ -835,7 +847,10 @@
                 equipos.forEach(eq => equipoPorId[eq.id_equipo] = eq);
 
                 // Filtrar solo notificaciones
-                const notificaciones = alertas.filter(a => a.tipo_alerta.toLowerCase() === "notification");
+                const notificaciones = alertas
+                    .filter(a => a.tipo_alerta.toLowerCase() === "notification" && a.estado_alerta.toLowerCase() === "activo")
+                    .sort((a, b) => new Date(b.fecha_hora_alerta) - new Date(a.fecha_hora_alerta))
+                    .slice(0, 5);
 
                 const container = document.getElementById("notifications-container");
                 container.innerHTML = "";
