@@ -99,20 +99,30 @@ class Equipo(EquipoBase):
 
 # ---------- ALERTA ----------
 class AlertaBase(BaseModel):
+    # Campos OBLIGATORIOS
+    id_equipo: int
+    
+    # Campos OPCIONALES (pueden ser null en la BD)
     tipo_alerta: Optional[str] = None
     mensaje_alerta: Optional[str] = None
     criticidad_alerta: Optional[str] = None
-    fecha_hora_alerta: Optional[datetime] = None
     estado_alerta: Optional[str] = None
     codigo_alerta: Optional[str] = None
     showstopper_alerta: Optional[str] = None
     silencio_alerta: Optional[str] = None
     maintenence_alert: Optional[str] = None
-    id_equipo: int
 
+    # fecha_hora_alerta NO se incluye porque se auto-genera
 
 class AlertaCreate(AlertaBase):
     pass
+
+class AlertaResponse(AlertaBase):
+    id_alerta: int
+    fecha_hora_alerta: datetime
+    
+    class Config:
+        orm_mode = True
 
 
 class Alerta(AlertaBase):
