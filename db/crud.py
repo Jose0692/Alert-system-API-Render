@@ -89,12 +89,31 @@ def get_all_alertas(db: Session):
 def get_alertas_by_equipo(db: Session, equipo_id: int):
     return db.query(models.Alerta).filter(models.Alerta.id_equipo == equipo_id).all()
 
+def get_alerta_by_id(db: Session, alerta_id: int):
+    return db.query(models.Alerta).filter(models.Alerta.id_alerta == alerta_id).first()
+
+def get_alertas_by_codigo_equipo(db: Session, codigo_alerta: str, equipo_id: int):
+    return db.query(models.Alerta).filter(
+        models.Alerta.codigo_alerta == codigo_alerta,
+        models.Alerta.id_equipo == equipo_id
+    ).all()
+
 def create_alerta(db: Session, alerta: schemas.AlertaCreate):
     nueva_alerta = models.Alerta(**alerta.dict())
     db.add(nueva_alerta)
     db.commit()
     db.refresh(nueva_alerta)
     return nueva_alerta
+
+def update_alerta(db: Session, alerta_id: int, alerta_update: schemas.AlertaUpdate):
+    db_alerta = db.query(models.Alerta).filter(models.Alerta.id_alerta == alerta_id).first()
+    if db_alerta:
+        update_data = alerta_update.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(db_alerta, field, value)
+        db.commit()
+        db.refresh(db_alerta)
+    return db_alerta
 
 def get_numero_alertas_error(db: Session):
     return db.query(models.Alerta).filter(models.Alerta.tipo_alerta == "Error").count()

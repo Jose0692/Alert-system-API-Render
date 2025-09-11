@@ -32,6 +32,7 @@ class Zona(ZonaBase):
 class CineBase(BaseModel):
     nombre_cine: str
     ubicacion_cine: Optional[str] = None
+    estado_cine: Optional[str] = None
     id_zona: int
 
 class CineCreate(CineBase):
@@ -47,6 +48,7 @@ class Cine(CineBase):
 class SalaBase(BaseModel):
     numero_sala: int
     capacidad_sala: Optional[int] = None
+    estado_sala: Optional[str] = None
     id_cine: int
 
 class SalaCreate(SalaBase):
@@ -82,6 +84,7 @@ class EquipoBase(BaseModel):
     ip_equipo: Optional[str] = None
     fecha_mantenimiento_equipo: Optional[date] = None
     fecha_instalacion_equipo: Optional[date] = None
+    estado_equipo: Optional[str] = None
     id_sala: int
     id_categoria_equipo: int
 
@@ -117,12 +120,23 @@ class AlertaBase(BaseModel):
 class AlertaCreate(AlertaBase):
     pass
 
+class AlertaUpdate(BaseModel):
+    # Campos que se pueden actualizar
+    tipo_alerta: Optional[str] = None
+    mensaje_alerta: Optional[str] = None
+    criticidad_alerta: Optional[str] = None
+    estado_alerta: Optional[str] = None
+    codigo_alerta: Optional[str] = None
+    showstopper_alerta: Optional[str] = None
+    silencio_alerta: Optional[str] = None
+    maintenence_alert: Optional[str] = None
+
 class AlertaResponse(AlertaBase):
     id_alerta: int
     fecha_hora_alerta: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Alerta(AlertaBase):

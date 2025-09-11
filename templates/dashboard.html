@@ -17,6 +17,10 @@
             --dark-bg: #1a2431;
             --sidebar-width: 70px;
             --sidebar-expanded-width: 200px;
+            --zone-norte: #df41bd;
+            --zone-centro: #fc943a;
+            --zone-sur: #58321d;
+            --zone-chile: #5f0638;
         }
 
         * {
@@ -168,13 +172,13 @@
 
         .alert-buttons {
             display: flex;
-            justify-content: center;   /* los centra */
-            gap: 60px;                 /* espacio entre ellos */
+            justify-content: center;
+            gap: 60px;
             flex: 1;       
         }
 
         .alert-btn {             
-            justify-content: center;   /* centra el contenido dentro del botón */ 
+            justify-content: center;
             display: flex;
             align-items: center;
             padding: 12px 20px;
@@ -192,17 +196,16 @@
         }
 
         .showstopper-btn {
-            background: linear-gradient(45deg, #2c2c2c, #000000); /* Gris oscuro a negro */
+            background: linear-gradient(45deg, #2c2c2c, #000000);
         }
 
         .error-btn {
-            background: linear-gradient(45deg, #e74c3c, #b71c1c); /* Rojo intenso */
+            background: linear-gradient(45deg, #e74c3c, #b71c1c);
         }
 
         .warning-btn {
-            background: linear-gradient(45deg, #f1c40f, #f39c12); /* Amarillo a dorado */
+            background: linear-gradient(45deg, #f1c40f, #f39c12);
         }
-
 
         .alert-count {
             background-color: white;
@@ -352,7 +355,7 @@
         .cinemas-content {
             flex: 1;
             overflow-y: auto;
-            max-height: 390px;
+            max-height: 530px;
             padding-right: 6px;
         }
 
@@ -382,8 +385,7 @@
             scrollbar-color: #c1c1c1 #f1f1f1;
         }
 
-        /* Scrollbar minimalista */
-
+        /* Estilos actualizados para cines */
         .cinema-item {
             display: flex;
             justify-content: space-between;
@@ -399,12 +401,38 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .cinema-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
         .cinema-name {
             font-weight: bold;
             color: var(--primary-color);
             min-width: 120px;
             font-size: 14px;
         }
+
+        .zone-indicator {
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .zone-norte { background-color: var(--zone-norte); }
+        .zone-centro { background-color: var(--zone-centro); }
+        .zone-sur { background-color: var(--zone-sur); }
+        .zone-chile { background-color: var(--zone-chile); }
 
         .squares-container {
             display: flex;
@@ -438,6 +466,107 @@
         .square.black { background-color: var(--primary-color); }
         .square.gray { background-color: #95a5a6; }
 
+        /* Nuevos estilos para medidores de velocidad - EN COLUMNA */
+        .speedmeters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .speedmeter-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .speedmeter-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .speedmeter-container {
+            position: relative;
+            width: 140px;
+            height: 70px;
+            margin: 0 auto 5px;
+            overflow: hidden;
+        }
+
+        .speedmeter-background {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+
+        .speedmeter-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                #3498db 0deg, 
+                #3498db var(--rotation, 0deg), 
+                #e0e0e0 var(--rotation, 0deg), 
+                #e0e0e0 180deg
+            );
+            border-radius: 50%;
+            transform: rotate(270deg);
+            transform-origin: center;
+        }
+
+        .speedmeter-center {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .speedmeter-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .indicators-panel {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .indicator-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            text-align: center;
+        }
 
         /* Ajustes para pantallas más pequeñas */
         @media (max-width: 1600px) {
@@ -464,7 +593,7 @@
                 grid-template-columns: 1fr 2fr;
             }
             
-            .map-container {
+            .indicators-panel {
                 display: none;
             }
         }
@@ -482,37 +611,10 @@
             </div>
             
             <div class="nav-menu">
-                <a href="#" class="nav-item active">
+                <a href="/" class="nav-item active">
                     <i class="bi bi-speedometer2"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <!--<a href="#" class="nav-item">
-                    <i class="bi bi-bar-chart"></i>
-                    <span class="nav-text">Estadísticas</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="bi bi-people"></i>
-                    <span class="nav-text">Usuarios</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="bi bi-boxes"></i>
-                    <span class="nav-text">Inventario</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="bi bi-collection-play"></i>
-                    <span class="nav-text">Salas</span>
-                </a>
-            </div>
-            
-            <div class="nav-menu">
-                <a href="#" class="nav-item">
-                    <i class="bi bi-gear"></i>
-                    <span class="nav-text">Configuración</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span class="nav-text">Cerrar Sesión</span>
-                </a>-->
             </div>
         </div>
 
@@ -534,12 +636,6 @@
                         <span class="alert-count" id="warning-count">0</span>
                     </div>
                 </div>
-                
-                <!--<div class="user-panel">
-                    <div class="user-btn">
-                        <i class="bi bi-person"></i>
-                    </div>
-                </div>-->
             </div>
 
             <!-- Contenido del Dashboard -->
@@ -559,9 +655,46 @@
                     <div id="cinemas-container" class="cinemas-content"></div>
                 </div>
 
-                    <img src="/static/mapa.png" alt="Mapa de Perú y Chile" 
-                        style="max-width:320px; height:auto; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.15);" />
-                
+                <!-- Panel de Indicadores con medidores en columna -->
+                <div class="indicators-panel">
+                    <h3 class="indicator-title">ESTADO DEL SISTEMA</h3>
+                    
+                    <div class="speedmeters-container">
+                        <!-- Indicador de Cines Online -->
+                        <div class="speedmeter-wrapper">
+                            <div class="speedmeter-title">CINES ONLINE</div>
+                            <div class="speedmeter-container">
+                                <div class="speedmeter-background">
+                                    <div class="speedmeter-fill cines" id="cinema-speedmeter-fill"></div>
+                                </div>
+                                <div class="speedmeter-center"></div>
+                            </div>
+                            <div class="speedmeter-text" id="cinema-text">0/58</div>
+                        </div>
+                        
+                        <!-- Indicador de Salas Online -->
+                        <div class="speedmeter-wrapper">
+                            <div class="speedmeter-title">SALAS ONLINE</div>
+                            <div class="speedmeter-container">
+                                <div class="speedmeter-background">
+                                    <div class="speedmeter-fill salas" id="salas-speedmeter-fill"></div>
+                                </div>
+                                <div class="speedmeter-center"></div>
+                            </div>
+                            <div class="speedmeter-text" id="salas-text">0/500</div>
+                        </div>
+                        
+                        <!-- Indicador de Equipos Online -->
+                        <div class="speedmeter-wrapper">
+                            <div class="speedmeter-title">EQUIPOS ONLINE</div>
+                            <div class="speedmeter-container">
+                                <div class="speedmeter-background">
+                                    <div class="speedmeter-fill equipos" id="equipment-speedmeter-fill"></div>
+                                </div>
+                                <div class="speedmeter-center"></div>
+                            </div>
+                            <div class="speedmeter-text" id="equipment-text">0/784</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -569,129 +702,259 @@
     </div>
 
     <script>
-        // Simular datos de API
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Dashboard cargado - listo para conectar con API REST");
-            
-            // Añadir funcionalidad a los botones "View All"
-            document.querySelectorAll('.view-all-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('Redirigiendo a la página con todas las notificaciones');
-                    // Aquí iría la redirección real a otra página
+        // URLs de la API
+        const API_URLS = {
+            cines: "http://localhost:8000/cines/",
+            salas: "http://localhost:8000/salas/",
+            equipos: "http://localhost:8000/equipos/",
+            alertas: "http://localhost:8000/alertas/"
+        };
+
+        // Datos de zonas
+        const zonas = [
+            {"nombre_zona":"Sur","id_zona":1,"id_pais":1},
+            {"nombre_zona":"Centro","id_zona":2,"id_pais":1},
+            {"nombre_zona":"Norte","id_zona":3,"id_pais":1},
+            {"nombre_zona":"Centro","id_zona":4,"id_pais":2}
+        ];
+
+        // Función para calcular la prioridad de alerta
+        function calcularPrioridad(alerta) {
+            if (alerta.showstopper_alerta?.toLowerCase() === "si") return 4;
+            if (alerta.tipo_alerta?.toLowerCase() === "error") return 3;
+            if (alerta.tipo_alerta?.toLowerCase() === "warning") return 2;
+            if (alerta.tipo_alerta?.toLowerCase() === "notification") return 1;
+            return 0;
+        }
+
+        // Función para obtener datos de la API
+        async function fetchData() {
+            try {
+                const [cinesRes, salasRes, equiposRes, alertasRes] = await Promise.all([
+                    fetch(API_URLS.cines),
+                    fetch(API_URLS.salas),
+                    fetch(API_URLS.equipos),
+                    fetch(API_URLS.alertas)
+                ]);
+
+                const cines = await cinesRes.json();
+                const salas = await salasRes.json();
+                const equipos = await equiposRes.json();
+                const alertas = await alertasRes.json();
+
+                // Procesar y mostrar datos
+                procesarDatos(cines, salas, equipos, alertas);
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Función principal para procesar datos
+        function procesarDatos(cines, salas, equipos, alertas) {
+            // Crear mapas para búsquedas rápidas
+            const equiposPorSala = {};
+            equipos.forEach(eq => {
+                if (!equiposPorSala[eq.id_sala]) equiposPorSala[eq.id_sala] = [];
+                equiposPorSala[eq.id_sala].push(eq);
+            });
+
+            const alertasPorEquipo = {};
+            alertas.forEach(al => {
+                if (!alertasPorEquipo[al.id_equipo]) alertasPorEquipo[al.id_equipo] = [];
+                alertasPorEquipo[al.id_equipo].push(al);
+            });
+
+            // Calcular prioridad para cada cine
+            const cinesConPrioridad = cines.map(cine => {
+                let prioridadMaxima = 0;
+                
+                // Buscar salas de este cine
+                const salasDelCine = salas.filter(s => s.id_cine === cine.id_cine);
+                
+                // Verificar alertas en cada sala
+                salasDelCine.forEach(sala => {
+                    const eqs = equiposPorSala[sala.id_sala] || [];
+                    
+                    eqs.forEach(eq => {
+                        const als = alertasPorEquipo[eq.id_equipo] || [];
+                        
+                        als.forEach(al => {
+                            if (al.estado_alerta?.toLowerCase() === "activo") {
+                                const prioridad = calcularPrioridad(al);
+                                if (prioridad > prioridadMaxima) {
+                                    prioridadMaxima = prioridad;
+                                }
+                            }
+                        });
+                    });
                 });
+                
+                return { ...cine, prioridad: prioridadMaxima };
             });
-        });
-    </script>
 
-
-    <script>
-    const API_CINES   = "http://localhost:8000/cines/";     // endpoint de cines
-    const API_SALAS   = "http://localhost:8000/salas/";     // endpoint de salas
-    const API_EQUIPOS = "http://localhost:8000/equipos/";   // endpoint de equipos
-    const API_ALERTAS = "http://localhost:8000/alertas/";   // endpoint de alertas
-
-    async function fetchData() {
-        // 1. Obtener todo
-        const [cinesRes, salasRes, equiposRes, alertasRes] = await Promise.all([
-            fetch(API_CINES),
-            fetch(API_SALAS),
-            fetch(API_EQUIPOS),
-            fetch(API_ALERTAS)
-        ]);
-
-        const cines   = await cinesRes.json();
-        const salas   = await salasRes.json();
-        const equipos = await equiposRes.json();
-        const alertas = await alertasRes.json();
-
-        // 2. Crear mapa de equipos por sala
-        const equiposPorSala = {};
-        equipos.forEach(eq => {
-            if (!equiposPorSala[eq.id_sala]) equiposPorSala[eq.id_sala] = [];
-            equiposPorSala[eq.id_sala].push(eq);
-        });
-
-        // 3. Crear mapa de alertas por equipo
-        const alertasPorEquipo = {};
-        alertas.forEach(al => {
-            if (!alertasPorEquipo[al.id_equipo]) alertasPorEquipo[al.id_equipo] = [];
-            alertasPorEquipo[al.id_equipo].push(al);
-        });
-
-        // 4. Pintar en el DOM
-        const container = document.getElementById("cinemas-container");
-        container.innerHTML = "";
-
-        cines.forEach(cine => {
-            const cineDiv = document.createElement("div");
-            cineDiv.className = "cinema-item";
-
-            const cineName = document.createElement("div");
-            cineName.className = "cinema-name";
-            cineName.textContent = cine.nombre_cine;
-            cineDiv.appendChild(cineName);
-
-            const squaresContainer = document.createElement("div");
-            squaresContainer.className = "squares-container";
-            const row = document.createElement("div");
-            row.className = "squares-row";
-
-            // Buscar salas de este cine
-            const salasDelCine = salas.filter(s => s.id_cine === cine.id_cine);
-
-            salasDelCine.forEach(sala => {
-                const square = document.createElement("div");
-                square.className = "square";
-
-                // Buscar equipos de la sala
-                const eqs = equiposPorSala[sala.id_sala] || [];
-                let color = "green"; // por defecto
-
-                for (const eq of eqs) {
-                    const als = alertasPorEquipo[eq.id_equipo] || [];
-
-                    if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
-                                    a.showstopper_alerta?.toLowerCase() === "si")) {
-                        color = "black";
-                        break; // prioridad máxima
-                    } 
-                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
-                                        a.tipo_alerta?.toLowerCase() === "error")) {
-                        color = "red";
-                    } 
-                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
-                                        a.tipo_alerta?.toLowerCase() === "warning")) {
-                        color = "yellow";
-                    } 
-                    else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
-                                        a.tipo_alerta?.toLowerCase() === "notification")) {
-                        color = "blue";
-                    }
+            // Ordenar cines por prioridad (mayor primero) y luego por ID
+            cinesConPrioridad.sort((a, b) => {
+                if (b.prioridad !== a.prioridad) {
+                    return b.prioridad - a.prioridad;
                 }
-
-                square.classList.add(color);
-                square.textContent = sala.numero_sala;
-                row.appendChild(square);
+                return a.id_cine - b.id_cine;
             });
 
-            squaresContainer.appendChild(row);
-            cineDiv.appendChild(squaresContainer);
-            container.appendChild(cineDiv);
-        });
-    }
+            // Pintar cines en el DOM
+            mostrarCines(cinesConPrioridad, salas, equiposPorSala, alertasPorEquipo);
+            
+            // Actualizar medidores
+            actualizarMedidores(cines, salas, equipos);
+            
+            // Actualizar contadores de alertas
+            actualizarContadoresAlertas(alertas);
+            
+            // Cargar notificaciones
+            cargarNotificaciones(alertas, equipos, salas, cines);
+        }
 
-    // Actualizar cada 3 segundos
-    fetchData();
-    setInterval(fetchData, 3000);
-    </script>
+        // Función para mostrar cines en la lista
+        function mostrarCines(cinesConPrioridad, salas, equiposPorSala, alertasPorEquipo) {
+            const container = document.getElementById("cinemas-container");
+            container.innerHTML = "";
 
+            // Filtrar solo cines activos
+            const cinesActivos = cinesConPrioridad.filter(cine => 
+                cine.estado_cine?.toLowerCase() === "activo"
+            );
 
-   <script>
-    async function cargarAlertas() {
-        try {
-            const response = await fetch("http://localhost:8000/alertas/");
-            const alertas = await response.json();
+            cinesActivos.forEach(cine => {
+                const cineDiv = document.createElement("div");
+                cineDiv.className = "cinema-item";
 
+                const cineInfo = document.createElement("div");
+                cineInfo.className = "cinema-info";
+                
+                // Añadir indicador de zona
+                const zonaIndicator = document.createElement("div");
+                zonaIndicator.className = "zone-indicator";
+                
+                // Determinar clase CSS según la zona
+                const zona = zonas.find(z => z.id_zona === cine.id_zona);
+                if (zona) {
+                    if (zona.nombre_zona.toLowerCase() === "norte") {
+                        zonaIndicator.className += " zone-norte";
+                        zonaIndicator.textContent = "Norte";
+                    } else if (zona.nombre_zona.toLowerCase() === "centro") {
+                        if (zona.id_pais === 1) {
+                            zonaIndicator.className += " zone-centro";
+                            zonaIndicator.textContent = "Centro";
+                        } else {
+                            zonaIndicator.className += " zone-chile";
+                            zonaIndicator.textContent = "Chile";
+                        }
+                    } else if (zona.nombre_zona.toLowerCase() === "sur") {
+                        zonaIndicator.className += " zone-sur";
+                        zonaIndicator.textContent = "Sur";
+                    } else {
+                        zonaIndicator.className += " zone-centro";
+                        zonaIndicator.textContent = "Centro";
+                    }
+                } else {
+                    zonaIndicator.className += " zone-centro";
+                    zonaIndicator.textContent = "Centro";
+                }
+                
+                const cineName = document.createElement("div");
+                cineName.className = "cinema-name";
+                cineName.textContent = cine.nombre_cine;
+                
+                cineInfo.appendChild(zonaIndicator);
+                cineInfo.appendChild(cineName);
+                cineDiv.appendChild(cineInfo);
+
+                const squaresContainer = document.createElement("div");
+                squaresContainer.className = "squares-container";
+                const row = document.createElement("div");
+                row.className = "squares-row";
+
+                // Buscar salas de este cine (SOLO LAS ACTIVAS) y ORDENARLAS
+                const salasDelCine = salas
+                    .filter(s => s.id_cine === cine.id_cine && s.estado_sala?.toLowerCase() === "activo")
+                    .sort((a, b) => a.numero_sala - b.numero_sala);
+
+                salasDelCine.forEach(sala => {
+                    const square = document.createElement("div");
+                    square.className = "square";
+
+                    // Buscar equipos de la sala
+                    const eqs = equiposPorSala[sala.id_sala] || [];
+                    let color = "green"; // por defecto
+
+                    for (const eq of eqs) {
+                        const als = alertasPorEquipo[eq.id_equipo] || [];
+
+                        if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                        a.showstopper_alerta?.toLowerCase() === "si")) {
+                            color = "black";
+                            break; // prioridad máxima
+                        } 
+                        else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                            a.tipo_alerta?.toLowerCase() === "error")) {
+                            color = "red";
+                        } 
+                        else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                            a.tipo_alerta?.toLowerCase() === "warning")) {
+                            color = "yellow";
+                        } 
+                        else if (als.some(a => a.estado_alerta?.toLowerCase() === "activo" &&
+                                            a.tipo_alerta?.toLowerCase() === "notification")) {
+                            color = "blue";
+                        }
+                    }
+
+                    square.classList.add(color);
+                    square.textContent = sala.numero_sala;
+                    row.appendChild(square);
+                });
+
+                squaresContainer.appendChild(row);
+                cineDiv.appendChild(squaresContainer);
+                container.appendChild(cineDiv);
+            }); // Aquí cierra el forEach de cinesActivos
+        } // Aquí cierra la función mostrarCines
+        
+        // Función para actualizar medidores de velocidad
+        function actualizarMedidores(cines, salas, equipos) {
+            // Calcular cines activos
+            const cinesActivos = cines.filter(cine => cine.estado_cine?.toLowerCase() === "activo").length;
+            const totalCines = 58;
+            const porcentajeCines = totalCines > 0 ? (cinesActivos / totalCines) * 100 : 0;
+            const rotationCines = porcentajeCines * 1.8;
+            
+            // Actualizar medidor de cines
+            document.getElementById("cinema-text").textContent = `${cinesActivos}/${totalCines}`;
+            document.getElementById("cinema-speedmeter-fill").style.setProperty('--rotation', `${rotationCines}deg`);
+            
+            // Calcular salas activas
+            const salasActivas = salas.filter(sala => sala.estado_sala?.toLowerCase() === "activo").length;
+            const totalSalas = 421;
+            const porcentajeSalas = totalSalas > 0 ? (salasActivas / totalSalas) * 100 : 0;
+            const rotationSalas = porcentajeSalas * 1.8;
+            
+            // Actualizar medidor de salas
+            document.getElementById("salas-text").textContent = `${salasActivas}/${totalSalas}`;
+            document.getElementById("salas-speedmeter-fill").style.setProperty('--rotation', `${rotationSalas}deg`);
+            
+            // Calcular equipos activos
+            const equiposActivos = equipos.filter(equipo => equipo.estado_equipo?.toLowerCase() === "activo").length;
+            const totalEquipos = 842;
+            const porcentajeEquipos = totalEquipos > 0 ? (equiposActivos / totalEquipos) * 100 : 0;
+            const rotationEquipos = porcentajeEquipos * 1.8;
+            
+            // Actualizar medidor de equipos
+            document.getElementById("equipment-text").textContent = `${equiposActivos}/${totalEquipos}`;
+            document.getElementById("equipment-speedmeter-fill").style.setProperty('--rotation', `${rotationEquipos}deg`);
+        }
+
+        // Función para actualizar contadores de alertas
+        function actualizarContadoresAlertas(alertas) {
             let showstopper = 0;
             let errores = 0;
             let warnings = 0;
@@ -700,7 +963,6 @@
                 // Solo contar alertas con estado "activo"
                 if (alerta.estado_alerta.toLowerCase() === "activo") {
                     if (alerta.showstopper_alerta === "Si") {
-                        // Si es showstopper, lo contamos aparte y no suma a error/warning
                         showstopper++;
                     } else {
                         if (alerta.tipo_alerta.toLowerCase() === "error") {
@@ -716,118 +978,97 @@
             document.getElementById("showstopper-count").textContent = showstopper;
             document.getElementById("error-count").textContent = errores;
             document.getElementById("warning-count").textContent = warnings;
-
-        } catch (error) {
-            console.error("Error cargando alertas:", error);
         }
-    }
 
-    // Cargar al inicio
-    cargarAlertas();
+        // Función para cargar notificaciones
+        function cargarNotificaciones(alertas, equipos, salas, cines) {
+            // Crear mapas para búsquedas rápidas
+            const salaPorId = {};
+            salas.forEach(s => salaPorId[s.id_sala] = s);
 
-    // Opcional: refrescar cada 3 segundos
-    setInterval(cargarAlertas, 3000);
-</script>
+            const cinePorId = {};
+            cines.forEach(c => cinePorId[c.id_cine] = c);
 
-    <script>
-        const API_ALERTAS2 = "http://localhost:8000/alertas/";
-        const API_EQUIPOS2 = "http://localhost:8000/equipos/";
-        const API_SALAS2   = "http://localhost:8000/salas/";
-        const API_CINES2   = "http://localhost:8000/cines/";
+            const equipoPorId = {};
+            equipos.forEach(eq => equipoPorId[eq.id_equipo] = eq);
 
-        async function cargarNotificaciones() {
-            try {
-                const [alertasRes, equiposRes, salasRes, cinesRes] = await Promise.all([
-                    fetch(API_ALERTAS2),
-                    fetch(API_EQUIPOS2),
-                    fetch(API_SALAS2),
-                    fetch(API_CINES2)
-                ]);
+            // Filtrar solo notificaciones (lámpara o mantenimiento)
+            const notificaciones = alertas
+                .filter(a => a.estado_alerta.toLowerCase() === "activo" && 
+                            (a.maintenence_alert?.toLowerCase() === "mantenimiento" || 
+                             a.maintenence_alert?.toLowerCase() === "lampara"))
+                .sort((a, b) => new Date(b.fecha_hora_alerta) - new Date(a.fecha_hora_alerta))
+                .slice(0, 7);
 
-                const alertas = await alertasRes.json();
-                const equipos = await equiposRes.json();
-                const salas = await salasRes.json();
-                const cines = await cinesRes.json();
+            const container = document.getElementById("notifications-container");
+            container.innerHTML = "";
 
-                // Crear mapas para búsquedas rápidas
-                const salaPorId = {};
-                salas.forEach(s => salaPorId[s.id_sala] = s);
+            notificaciones.forEach(alerta => {
+                const eq = equipoPorId[alerta.id_equipo];
+                const sala = eq ? salaPorId[eq.id_sala] : null;
+                const cine = sala ? cinePorId[sala.id_cine] : null;
 
-                const cinePorId = {};
-                cines.forEach(c => cinePorId[c.id_cine] = c);
+                const notificationItem = document.createElement("div");
+                notificationItem.className = "notification-item";
 
-                const equipoPorId = {};
-                equipos.forEach(eq => equipoPorId[eq.id_equipo] = eq);
+                // Arriba: cine y sala
+                const header = document.createElement("div");
+                header.className = "notification-header";
 
-                // Filtrar solo notificaciones
-                const notificaciones = alertas
-                    .filter(a => a.tipo_alerta.toLowerCase() === "notification" && a.estado_alerta.toLowerCase() === "activo")
-                    .sort((a, b) => new Date(b.fecha_hora_alerta) - new Date(a.fecha_hora_alerta))
-                    .slice(0, 5);
+                const complex = document.createElement("span");
+                complex.className = "notification-complex";
+                if (cine && sala) {
+                    complex.textContent = `${cine.nombre_cine} - Sala ${sala.numero_sala}`;
+                } else {
+                    complex.textContent = "Desconocido";
+                }
 
-                const container = document.getElementById("notifications-container");
-                container.innerHTML = "";
+                const room = document.createElement("span");
+                room.className = "notification-room";
 
-                notificaciones.forEach(alerta => {
-                    const eq = equipoPorId[alerta.id_equipo];
-                    const sala = eq ? salaPorId[eq.id_sala] : null;
-                    const cine = sala ? cinePorId[sala.id_cine] : null;
+                // Mostrar columna maintenance (ejemplo: "Mantenimiento" o "Lampara")
+                if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "mantenimiento") {
+                    room.textContent = "Mantenimiento";
+                } else if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "lampara") {
+                    room.textContent = "Lámpara";
+                } else {
+                    room.textContent = "Otro";
+                }
 
-                    const notificationItem = document.createElement("div");
-                    notificationItem.className = "notification-item";
+                header.appendChild(complex);
+                header.appendChild(room);
 
-                    // Arriba: cine y sala
-                    const header = document.createElement("div");
-                    header.className = "notification-header";
+                // Abajo: mensaje de la alerta
+                const details = document.createElement("div");
+                details.className = "notification-details";
 
-                    const complex = document.createElement("span");
-                    complex.className = "notification-complex";
-                    if (cine && sala) {
-                        complex.textContent = `${cine.nombre_cine} - Sala ${sala.numero_sala}`;
-                    } else {
-                        complex.textContent = "Desconocido";
-                    }
+                const type = document.createElement("span");
+                type.className = "notification-type info";
+                type.textContent = alerta.mensaje_alerta;
 
-                    const room = document.createElement("span");
-                    room.className = "notification-room";
+                details.appendChild(type);
 
-                    // Mostrar columna maintenance (ejemplo: "Mantenimiento" o "Lampara")
-                    if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "mantenimiento") {
-                        room.textContent = "Mantenimiento";
-                    } else if (alerta.maintenence_alert && alerta.maintenence_alert.toLowerCase() === "lampara") {
-                        room.textContent = "Lámpara";
-                    } else {
-                        room.textContent = "Otro";
-                    }
+                notificationItem.appendChild(header);
+                notificationItem.appendChild(details);
+                container.appendChild(notificationItem);
+            });
+        }
 
-                    header.appendChild(complex);
-                    header.appendChild(room);
-
-                    // Abajo: mensaje de la alerta
-                    const details = document.createElement("div");
-                    details.className = "notification-details";
-
-                    const type = document.createElement("span");
-                    type.className = "notification-type info";
-                    type.textContent = alerta.mensaje_alerta;
-
-                    details.appendChild(type);
-
-                    notificationItem.appendChild(header);
-                    notificationItem.appendChild(details);
-                    container.appendChild(notificationItem);
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Dashboard cargado - listo para conectar con API REST");
+            
+            // Añadir funcionalidad a los botones "View All"
+            document.querySelectorAll('.view-all-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Redirigiendo a la página con todas las notificaciones');
                 });
-
-            } catch (error) {
-                console.error("Error cargando notificaciones:", error);
-            }
-        }
-
-        // Cargar al inicio
-        cargarNotificaciones();
-        // Opcional refrescar cada 1 min
-        setInterval(cargarNotificaciones, 60000);
-        </script>
-
+            });
+            
+            // Cargar datos iniciales y configurar intervalo de actualización
+            fetchData();
+            setInterval(fetchData, 3000);
+        });
+    </script>
 </body>
 </html>
