@@ -11,6 +11,8 @@ from router import paises, zonas, cines, salas, categoria_equipos, equipos, aler
 
 models.Base.metadata.create_all(bind=engine)
 
+##render templates
+
 app = FastAPI()
 
 # Incluir routers
