@@ -4,6 +4,7 @@ from datetime import date, datetime
 
 class PaisBase(BaseModel):
     num_cine: int 
+    octeto_pais: int
     nombre: str
 
 class PaisCreate(PaisBase):
@@ -17,6 +18,7 @@ class Pais(PaisBase):
 
 class ZonaBase(BaseModel):
     nombre_zona: str
+    correo_zona: str
     id_pais: int
 
 class ZonaCreate(ZonaBase):
@@ -32,6 +34,7 @@ class Zona(ZonaBase):
 class CineBase(BaseModel):
     nombre_cine: str
     ubicacion_cine: Optional[str] = None
+    num_cine: Optional[str] = None
     estado_cine: Optional[str] = None
     id_zona: int
 

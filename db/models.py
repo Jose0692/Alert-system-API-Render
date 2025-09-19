@@ -8,7 +8,7 @@ Base = declarative_base()
 class Pais(Base):
     __tablename__ = "paises"
     id_pais = Column(Integer, primary_key=True, index=True)
-    num_cine = Column(Integer, nullable=False)
+    octeto_pais = Column(Integer)
     nombre_pais = Column(String(100), nullable=False)
     zonas = relationship("Zona", back_populates="pais", cascade="all, delete")
 
@@ -16,6 +16,7 @@ class Zona(Base):
     __tablename__ = "zonas"
     id_zona = Column(Integer, primary_key=True, index=True)
     nombre_zona = Column(String(100), nullable=False)
+    correo_zona = Column(String(100), nullable=False)
     id_pais = Column(Integer, ForeignKey("paises.id_pais", ondelete="CASCADE"), nullable=False)
     pais = relationship("Pais", back_populates="zonas")
     cines = relationship("Cine", back_populates="zona", cascade="all, delete")
@@ -25,6 +26,7 @@ class Cine(Base):
     id_cine = Column(Integer, primary_key=True, index=True)
     nombre_cine = Column(String(150), nullable=False)
     ubicacion_cine = Column(String(255))
+    num_cine = Column(Integer)
     estado_cine = Column(String(255))
     id_zona = Column(Integer, ForeignKey("zonas.id_zona", ondelete="CASCADE"), nullable=False)
     zona = relationship("Zona", back_populates="cines")
