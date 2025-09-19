@@ -88,6 +88,15 @@ class EquipoBase(BaseModel):
     fecha_mantenimiento_equipo: Optional[date] = None
     fecha_instalacion_equipo: Optional[date] = None
     estado_equipo: Optional[str] = None
+    hora_restante_equipo_1: int
+    hora_uso_equipo_1: int
+    modelo_consum_equipo_1: Optional[str] = None
+    hora_restante_equipo_2: int
+    hora_uso_equipo_2: int
+    modelo_consum_equipo_2: Optional[str] = None
+    hora_restante_equipo_3: int
+    hora_uso_equipo_3: int
+    modelo_consum_equipo_3: Optional[str] = None
     id_sala: int
     id_categoria_equipo: int
 

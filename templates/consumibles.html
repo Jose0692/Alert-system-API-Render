@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSMONITOREO - Horas de Consumibles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+            --info-color: #1abc9c;
+            --dark-bg: #1a2431;
+            --sidebar-width: 70px;
+            --sidebar-expanded-width: 200px;
+            --zone-norte: #df41bd;
+            --zone-centro: #fc943a;
+            --zone-sur: #58321d;
+            --zone-chile: #5f0638;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Layout Principal */
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Compacta */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark-bg);
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-expanded-width);
+        }
+
+        .logo-container {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .sidebar:hover .logo-container {
+            justify-content: flex-start;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .logo-compact {
+            display: block;
+        }
+
+        .logo-full {
+            display: none;
+        }
+
+        .sidebar:hover .logo-compact {
+            display: none;
+        }
+
+        .sidebar:hover .logo-full {
+            display: block;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 5px 0;
+            white-space: nowrap;
+            justify-content: center;
+        }
+
+        .sidebar:hover .nav-item {
+            justify-content: flex-start;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .nav-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            transition: opacity 0.2s ease, width 0.3s ease;
+        }
+
+        .sidebar:hover .nav-text {
+            opacity: 1;
+            width: auto;
+            margin-left: 15px;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+        }
+
+        .consumables-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs-container {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .consumable-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .consumable-info {
+            flex: 1;
+        }
+
+        .consumable-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .consumable-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .hours-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hours-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .hours-progress {
+            width: 150px;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .hours-progress-bar {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .hours-progress-bar.safe {
+            background-color: var(--success-color);
+        }
+
+        .hours-progress-bar.warning {
+            background-color: var(--warning-color);
+        }
+
+        .hours-progress-bar.danger {
+            background-color: var(--danger-color);
+        }
+
+        .download-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .export-all-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 15px;
+            align-self: flex-end;
+        }
+
+        .export-all-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* Ajustes para pantallas más pequeñas */
+        @media (max-width: 1200px) {
+            .filter-group {
+                min-width: 150px;
+            }
+            
+            .hours-progress {
+                width: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .consumable-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .hours-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Compacta -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <span class="logo-compact">CS</span>
+                    <span class="logo-full">CS<span> MONITOREO</span></span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/" class="nav-item">
+                    <i class="bi bi-speedometer2"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/consumibles" class="nav-item active">
+                    <i class="bi bi-clock-history"></i>
+                    <span class="nav-text">Consumibles</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 class="page-title">Horas de Consumibles</h1>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="filter-label">Zona</div>
+                        <select class="filter-select" id="filter-zone">
+                            <option value="all">Todas las zonas</option>
+                            <option value="norte">Zona Norte</option>
+                            <option value="centro">Zona Centro</option>
+                            <option value="sur">Zona Sur</option>
+                            <option value="chile">Chile</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="filter-label">Cine</div>
+                        <select class="filter-select" id="filter-cinema">
+                            <option value="all">Todos los cines</option>
+                            <!-- Opciones se llenarán dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="filter-label">Tipo de Equipo</div>
+                        <select class="filter-select" id="filter-type">
+                            <option value="all">Todos los equipos</option>
+                            <option value="projector">Proyectores</option>
+                            <option value="server">Servidores</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="filter-label">Estado</div>
+                        <select class="filter-select" id="filter-status">
+                            <option value="all">Todos</option>
+                            <option value="safe">En rango seguro</option>
+                            <option value="warning">Próximo a mantenimiento</option>
+                            <option value="danger">Requiere mantenimiento</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido de Consumibles -->
+            <div class="consumables-content">
+                <div class="tabs-container">
+                    <div class="tab active" data-tab="projectors">Proyectores (Lámpara/Láser)</div>
+                    <div class="tab" data-tab="servers">Servidores (Disco)</div>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Pestaña de Proyectores -->
+                    <div class="tab-pane active" id="projectors-tab">
+                        <div id="projectors-container">
+                            <!-- Aquí se cargarán los proyectores -->
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña de Servidores -->
+                    <div class="tab-pane" id="servers-tab">
+                        <div id="servers-container">
+                            <!-- Aquí se cargarán los servidores -->
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="export-all-btn" id="export-all-btn">
+                    <i class="bi bi-download"></i> Exportar Todo a CSV
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URLs de la API
+        const API_URLS = {
+            cines: "http://localhost:8000/cines/",
+            salas: "http://localhost:8000/salas/",
+            equipos: "http://localhost:8000/equipos/",
+            consumibles: "http://localhost:8000/consumibles/" // Endpoint hipotético
+        };
+
+        // Datos de zonas
+        const zonas = [
+            {"nombre_zona":"Sur","id_zona":1,"id_pais":1},
+            {"nombre_zona":"Centro","id_zona":2,"id_pais":1},
+            {"nombre_zona":"Norte","id_zona":3,"id_pais":1},
+            {"nombre_zona":"Centro","id_zona":4,"id_pais":2}
+        ];
+
+        // Límites de horas para cada tipo de equipo
+        const HOURS_LIMITS = {
+            projector: {
+                safe: 1000,
+                warning: 1500,
+                danger: 2000
+            },
+            server: {
+                safe: 15000,
+                warning: 20000,
+                danger: 25000
+            }
+        };
+
+        // Datos globales
+        let allData = {
+            cines: [],
+            salas: [],
+            equipos: [],
+            consumibles: []
+        };
+
+        // Función para obtener datos de la API
+        async function fetchData() {
+            try {
+                const [cinesRes, salasRes, equiposRes, consumiblesRes] = await Promise.all([
+                    fetch(API_URLS.cines),
+                    fetch(API_URLS.salas),
+                    fetch(API_URLS.equipos),
+                    fetch(API_URLS.consumibles)
+                ]);
+
+                allData.cines = await cinesRes.json();
+                allData.salas = await salasRes.json();
+                allData.equipos = await equiposRes.json();
+                allData.consumibles = await consumiblesRes.json();
+
+                // Procesar y mostrar datos
+                processData();
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Para propósitos de demostración, cargar datos de ejemplo
+                loadSampleData();
+            }
+        }
+
+        // Función para cargar datos de ejemplo (si la API no está disponible)
+        function loadSampleData() {
+            // Datos de ejemplo para cines
+            allData.cines = [
+                { id_cine: 1, nombre_cine: "Cine Norte", id_zona: 3, estado_cine: "Activo" },
+                { id_cine: 2, nombre_cine: "Cine Centro", id_zona: 2, estado_cine: "Activo" },
+                { id_cine: 3, nombre_cine: "Cine Sur", id_zona: 1, estado_cine: "Activo" },
+                { id_cine: 4, nombre_cine: "Cine Chile", id_zona: 4, estado_cine: "Activo" }
+            ];
+            
+            // Datos de ejemplo para salas
+            allData.salas = [
+                { id_sala: 1, id_cine: 1, numero_sala: 1, estado_sala: "Activo" },
+                { id_sala: 2, id_cine: 1, numero_sala: 2, estado_sala: "Activo" },
+                { id_sala: 3, id_cine: 2, numero_sala: 1, estado_sala: "Activo" },
+                { id_sala: 4, id_cine: 3, numero_sala: 1, estado_sala: "Activo" },
+                { id_sala: 5, id_cine: 4, numero_sala: 1, estado_sala: "Activo" }
+            ];
+            
+            // Datos de ejemplo para equipos
+            allData.equipos = [
+                { id_equipo: 1, id_sala: 1, nombre_equipo: "Proyector Sala 1", tipo_equipo: "projector", estado_equipo: "Activo" },
+                { id_equipo: 2, id_sala: 2, nombre_equipo: "Proyector Sala 2", tipo_equipo: "projector", estado_equipo: "Activo" },
+                { id_equipo: 3, id_sala: 3, nombre_equipo: "Proyector Principal", tipo_equipo: "projector", estado_equipo: "Activo" },
+                { id_equipo: 4, id_sala: 4, nombre_equipo: "Proyector Sur", tipo_equipo: "projector", estado_equipo: "Activo" },
+                { id_equipo: 5, id_sala: 5, nombre_equipo: "Proyector Chile", tipo_equipo: "projector", estado_equipo: "Activo" },
+                { id_equipo: 6, id_sala: 1, nombre_equipo: "Servidor Principal", tipo_equipo: "server", estado_equipo: "Activo" },
+                { id_equipo: 7, id_sala: 2, nombre_equipo: "Servidor Secundario", tipo_equipo: "server", estado_equipo: "Activo" },
+                { id_equipo: 8, id_sala: 3, nombre_equipo: "Servidor Centro", tipo_equipo: "server", estado_equipo: "Activo" }
+            ];
+            
+            // Datos de ejemplo para consumibles
+            allData.consumibles = [
+                { id_consumible: 1, id_equipo: 1, tipo_consumible: "lamp", horas: 1250, fecha_ultimo_cambio: "2023-05-15" },
+                { id_consumible: 2, id_equipo: 2, tipo_consumible: "lamp", horas: 800, fecha_ultimo_cambio: "2023-08-20" },
+                { id_consumible: 3, id_equipo: 3, tipo_consumible: "laser", horas: 1800, fecha_ultimo_cambio: "2023-02-10" },
+                { id_consumible: 4, id_equipo: 4, tipo_consumible: "lamp", horas: 2100, fecha_ultimo_cambio: "2022-12-05" },
+                { id_consumible: 5, id_equipo: 5, tipo_consumible: "laser", horas: 500, fecha_ultimo_cambio: "2023-10-01" },
+                { id_consumible: 6, id_equipo: 6, tipo_consumible: "hdd", horas: 12000, fecha_ultimo_cambio: "2022-06-15" },
+                { id_consumible: 7, id_equipo: 7, tipo_consumible: "hdd", horas: 22000, fecha_ultimo_cambio: "2021-11-20" },
+                { id_consumible: 8, id_equipo: 8, tipo_consumible: "hdd", horas: 18000, fecha_ultimo_cambio: "2022-03-10" }
+            ];
+            
+            processData();
+        }
+
+        // Función principal para procesar datos
+        function processData() {
+            // Llenar selectores de filtro
+            populateFilters();
+            
+            // Mostrar datos
+            displayProjectors();
+            displayServers();
+            
+            // Configurar event listeners para filtros
+            setupFilterListeners();
+        }
+
+        // Función para llenar los selectores de filtro
+        function populateFilters() {
+            const cinemaSelect = document.getElementById('filter-cinema');
+            
+            // Limpiar opciones existentes (excepto la primera)
+            while (cinemaSelect.options.length > 1) {
+                cinemaSelect.remove(1);
+            }
+            
+            // Agregar cines activos
+            allData.cines
+                .filter(cine => cine.estado_cine?.toLowerCase() === 'activo')
+                .forEach(cine => {
+                    const option = document.createElement('option');
+                    option.value = cine.id_cine;
+                    option.textContent = cine.nombre_cine;
+                    cinemaSelect.appendChild(option);
+                });
+        }
+
+        // Función para mostrar proyectores
+        function displayProjectors() {
+            const container = document.getElementById('projectors-container');
+            container.innerHTML = '';
+            
+            // Obtener filtros aplicados
+            const filters = getCurrentFilters();
+            
+            // Filtrar equipos de tipo proyector
+            const projectors = allData.equipos.filter(equipo => 
+                equipo.tipo_equipo === 'projector' && 
+                equipo.estado_equipo?.toLowerCase() === 'activo'
+            );
+            
+            // Aplicar filtros adicionales
+            const filteredProjectors = applyFilters(projectors, filters);
+            
+            if (filteredProjectors.length === 0) {
+                container.innerHTML = '<div class="text-center p-4">No se encontraron proyectores con los filtros aplicados</div>';
+                return;
+            }
+            
+            // Mostrar cada proyector
+            filteredProjectors.forEach(equipo => {
+                const consumible = allData.consumibles.find(c => 
+                    c.id_equipo === equipo.id_equipo && 
+                    (c.tipo_consumible === 'lamp' || c.tipo_consumible === 'laser')
+                );
+                
+                const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+                const cine = allData.cines.find(c => c.id_cine === sala?.id_cine);
+                const zona = zonas.find(z => z.id_zona === cine?.id_zona);
+                
+                const hours = consumible ? consumible.horas : 0;
+                const status = getHoursStatus(hours, 'projector');
+                
+                const card = document.createElement('div');
+                card.className = 'consumable-card';
+                card.innerHTML = `
+                    <div class="consumable-info">
+                        <div class="consumable-name">${equipo.nombre_equipo}</div>
+                        <div class="consumable-details">
+                            ${cine ? cine.nombre_cine : 'Cine desconocido'} - 
+                            ${sala ? `Sala ${sala.numero_sala}` : 'Sala desconocida'} - 
+                            ${zona ? `Zona ${zona.nombre_zona}` : 'Zona desconocida'}
+                        </div>
+                        <div class="consumable-details">
+                            Tipo: ${consumible?.tipo_consumible === 'laser' ? 'Láser' : 'Lámpara'} | 
+                            Último cambio: ${consumible?.fecha_ultimo_cambio || 'N/A'}
+                        </div>
+                    </div>
+                    <div class="hours-container">
+                        <div class="hours-display">${hours}h</div>
+                        <div class="hours-progress">
+                            <div class="hours-progress-bar ${status}" style="width: ${calculateProgressWidth(hours, 'projector')}%"></div>
+                        </div>
+                    </div>
+                    <button class="download-btn" data-id="${consumible?.id_consumible || ''}" data-type="projector">
+                        <i class="bi bi-download"></i> Descargar
+                    </button>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // Configurar event listeners para botones de descarga
+            setupDownloadButtons();
+        }
+
+        // Función para mostrar servidores
+        function displayServers() {
+            const container = document.getElementById('servers-container');
+            container.innerHTML = '';
+            
+            // Obtener filtros aplicados
+            const filters = getCurrentFilters();
+            
+            // Filtrar equipos de tipo servidor
+            const servers = allData.equipos.filter(equipo => 
+                equipo.tipo_equipo === 'server' && 
+                equipo.estado_equipo?.toLowerCase() === 'activo'
+            );
+            
+            // Aplicar filtros adicionales
+            const filteredServers = applyFilters(servers, filters);
+            
+            if (filteredServers.length === 0) {
+                container.innerHTML = '<div class="text-center p-4">No se encontraron servidores con los filtros aplicados</div>';
+                return;
+            }
+            
+            // Mostrar cada servidor
+            filteredServers.forEach(equipo => {
+                const consumible = allData.consumibles.find(c => 
+                    c.id_equipo === equipo.id_equipo && 
+                    c.tipo_consumible === 'hdd'
+                );
+                
+                const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+                const cine = allData.cines.find(c => c.id_cine === sala?.id_cine);
+                const zona = zonas.find(z => z.id_zona === cine?.id_zona);
+                
+                const hours = consumible ? consumible.horas : 0;
+                const status = getHoursStatus(hours, 'server');
+                
+                const card = document.createElement('div');
+                card.className = 'consumable-card';
+                card.innerHTML = `
+                    <div class="consumable-info">
+                        <div class="consumable-name">${equipo.nombre_equipo}</div>
+                        <div class="consumable-details">
+                            ${cine ? cine.nombre_cine : 'Cine desconocido'} - 
+                            ${sala ? `Sala ${sala.numero_sala}` : 'Sala desconocida'} - 
+                            ${zona ? `Zona ${zona.nombre_zona}` : 'Zona desconocida'}
+                        </div>
+                        <div class="consumable-details">
+                            Tipo: Disco duro | 
+                            Último cambio: ${consumible?.fecha_ultimo_cambio || 'N/A'}
+                        </div>
+                    </div>
+                    <div class="hours-container">
+                        <div class="hours-display">${hours}h</div>
+                        <div class="hours-progress">
+                            <div class="hours-progress-bar ${status}" style="width: ${calculateProgressWidth(hours, 'server')}%"></div>
+                        </div>
+                    </div>
+                    <button class="download-btn" data-id="${consumible?.id_consumible || ''}" data-type="server">
+                        <i class="bi bi-download"></i> Descargar
+                    </button>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // Configurar event listeners para botones de descarga
+            setupDownloadButtons();
+        }
+
+        // Función para obtener los filtros actuales
+        function getCurrentFilters() {
+            return {
+                zone: document.getElementById('filter-zone').value,
+                cinema: document.getElementById('filter-cinema').value,
+                type: document.getElementById('filter-type').value,
+                status: document.getElementById('filter-status').value
+            };
+        }
+
+        // Función para aplicar filtros a los equipos
+        function applyFilters(equipos, filters) {
+            return equipos.filter(equipo => {
+                const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+                const cine = allData.cines.find(c => c.id_cine === sala?.id_cine);
+                const consumible = allData.consumibles.find(c => c.id_equipo === equipo.id_equipo);
+                const hours = consumible ? consumible.horas : 0;
+                
+                // Filtrar por zona
+                if (filters.zone !== 'all') {
+                    let zonaNombre = '';
+                    if (cine) {
+                        const zona = zonas.find(z => z.id_zona === cine.id_zona);
+                        zonaNombre = zona ? zona.nombre_zona.toLowerCase() : '';
+                    }
+                    
+                    if (filters.zone === 'norte' && zonaNombre !== 'norte') return false;
+                    if (filters.zone === 'centro' && zonaNombre !== 'centro') return false;
+                    if (filters.zone === 'sur' && zonaNombre !== 'sur') return false;
+                    if (filters.zone === 'chile') {
+                        if (!cine || cine.id_zona !== 4) return false;
+                    }
+                }
+                
+                // Filtrar por cine
+                if (filters.cinema !== 'all') {
+                    if (!sala || sala.id_cine !== parseInt(filters.cinema)) return false;
+                }
+                
+                // Filtrar por tipo (ya se aplicó antes, pero por si acaso)
+                if (filters.type !== 'all') {
+                    if (filters.type === 'projector' && equipo.tipo_equipo !== 'projector') return false;
+                    if (filters.type === 'server' && equipo.tipo_equipo !== 'server') return false;
+                }
+                
+                // Filtrar por estado
+                if (filters.status !== 'all') {
+                    const equipmentType = equipo.tipo_equipo;
+                    const status = getHoursStatus(hours, equipmentType);
+                    
+                    if (filters.status === 'safe' && status !== 'safe') return false;
+                    if (filters.status === 'warning' && status !== 'warning') return false;
+                    if (filters.status === 'danger' && status !== 'danger') return false;
+                }
+                
+                return true;
+            });
+        }
+
+        // Función para obtener el estado basado en las horas
+        function getHoursStatus(hours, type) {
+            const limits = HOURS_LIMITS[type];
+            
+            if (hours < limits.safe) return 'safe';
+            if (hours < limits.warning) return 'warning';
+            return 'danger';
+        }
+
+        // Función para calcular el ancho de la barra de progreso
+        function calculateProgressWidth(hours, type) {
+            const limits = HOURS_LIMITS[type];
+            const maxHours = limits.danger * 1.2; // Un poco más del límite de peligro para visualización
+            
+            return Math.min((hours / maxHours) * 100, 100);
+        }
+
+        // Función para configurar los listeners de los filtros
+        function setupFilterListeners() {
+            const filterIds = ['filter-zone', 'filter-cinema', 'filter-type', 'filter-status'];
+            
+            filterIds.forEach(id => {
+                document.getElementById(id).addEventListener('change', () => {
+                    // Determinar qué pestaña está activa y actualizar accordingly
+                    const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+                    
+                    if (activeTab === 'projectors') {
+                        displayProjectors();
+                    } else {
+                        displayServers();
+                    }
+                });
+            });
+        }
+
+        // Función para configurar los botones de descarga
+        function setupDownloadButtons() {
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const type = this.getAttribute('data-type');
+                    
+                    if (!id) {
+                        alert('No hay datos de consumible para descargar');
+                        return;
+                    }
+                    
+                    downloadConsumibleReport(id, type);
+                });
+            });
+        }
+
+        // Función para descargar reporte de un consumible
+        function downloadConsumibleReport(consumibleId, type) {
+            const consumible = allData.consumibles.find(c => c.id_consumible == consumibleId);
+            
+            if (!consumible) {
+                alert('No se encontraron datos del consumible');
+                return;
+            }
+            
+            const equipo = allData.equipos.find(e => e.id_equipo === consumible.id_equipo);
+            const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+            const cine = allData.cines.find(c => c.id_cine === sala.id_cine);
+            const zona = zonas.find(z => z.id_zona === cine.id_zona);
+            
+            // Crear contenido CSV
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            if (type === 'projector') {
+                csvContent += "Reporte de Horas de Lámpara/Láser\n\n";
+                csvContent += `Equipo: ${equipo.nombre_equipo}\n`;
+                csvContent += `Cine: ${cine.nombre_cine}\n`;
+                csvContent += `Sala: ${sala.numero_sala}\n`;
+                csvContent += `Zona: ${zona.nombre_zona}\n`;
+                csvContent += `Tipo: ${consumible.tipo_consumible === 'laser' ? 'Láser' : 'Lámpara'}\n`;
+                csvContent += `Horas acumuladas: ${consumible.horas}\n`;
+                csvContent += `Último cambio: ${consumible.fecha_ultimo_cambio}\n`;
+                csvContent += `Estado: ${getHoursStatus(consumible.horas, 'projector')}\n`;
+            } else {
+                csvContent += "Reporte de Horas de Disco Duro\n\n";
+                csvContent += `Equipo: ${equipo.nombre_equipo}\n`;
+                csvContent += `Cine: ${cine.nombre_cine}\n`;
+                csvContent += `Sala: ${sala.numero_sala}\n`;
+                csvContent += `Zona: ${zona.nombre_zona}\n`;
+                csvContent += `Horas acumuladas: ${consumible.horas}\n`;
+                csvContent += `Último cambio: ${consumible.fecha_ultimo_cambio}\n`;
+                csvContent += `Estado: ${getHoursStatus(consumible.horas, 'server')}\n`;
+            }
+            
+            // Crear enlace de descarga
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `reporte_consumible_${consumibleId}.csv`);
+            document.body.appendChild(link);
+            
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Función para exportar todos los datos a CSV
+        function exportAllToCSV() {
+            // Crear contenido CSV
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Tipo,Cine,Sala,Equipo,Consumible,Horas,Último Cambio,Estado\n";
+            
+            // Procesar proyectores
+            allData.equipos
+                .filter(equipo => equipo.tipo_equipo === 'projector' && equipo.estado_equipo?.toLowerCase() === 'activo')
+                .forEach(equipo => {
+                    const consumible = allData.consumibles.find(c => 
+                        c.id_equipo === equipo.id_equipo && 
+                        (c.tipo_consumible === 'lamp' || c.tipo_consumible === 'laser')
+                    );
+                    
+                    if (consumible) {
+                        const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+                        const cine = allData.cines.find(c => c.id_cine === sala?.id_cine);
+                        const zona = zonas.find(z => z.id_zona === cine?.id_zona);
+                        
+                        csvContent += `Proyector,${cine?.nombre_cine || 'N/A'},${sala?.numero_sala || 'N/A'},${equipo.nombre_equipo},${consumible.tipo_consumible === 'laser' ? 'Láser' : 'Lámpara'},${consumible.horas},${consumible.fecha_ultimo_cimiento || 'N/A'},${getHoursStatus(consumible.horas, 'projector')}\n`;
+                    }
+                });
+            
+            // Procesar servidores
+            allData.equipos
+                .filter(equipo => equipo.tipo_equipo === 'server' && equipo.estado_equipo?.toLowerCase() === 'activo')
+                .forEach(equipo => {
+                    const consumible = allData.consumibles.find(c => 
+                        c.id_equipo === equipo.id_equipo && 
+                        c.tipo_consumible === 'hdd'
+                    );
+                    
+                    if (consumible) {
+                        const sala = allData.salas.find(s => s.id_sala === equipo.id_sala);
+                        const cine = allData.cines.find(c => c.id_cine === sala?.id_cine);
+                        const zona = zonas.find(z => z.id_zona === cine?.id_zona);
+                        
+                        csvContent += `Servidor,${cine?.nombre_cine || 'N/A'},${sala?.numero_sala || 'N/A'},${equipo.nombre_equipo},Disco Duro,${consumible.horas},${consumible.fecha_ultimo_cambio || 'N/A'},${getHoursStatus(consumible.horas, 'server')}\n`;
+                    }
+                });
+            
+            // Crear enlace de descarga
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "reporte_consumibles_completo.csv");
+            document.body.appendChild(link);
+            
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Inicializar la aplicación cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remover clase active de todos los tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    // Agregar clase active al tab clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todos los paneles
+                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                    
+                    // Mostrar el panel correspondiente
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Actualizar la vista según el tab seleccionado
+                    if (tabId === 'projectors') {
+                        displayProjectors();
+                    } else {
+                        displayServers();
+                    }
+                });
+            });
+            
+            // Configurar botón de exportar todo
+            document.getElementById('export-all-btn').addEventListener('click', exportAllToCSV);
+            
+            // Cargar datos
+            fetchData();
+        });
+    </script>
+</body>
+</html>

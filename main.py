@@ -29,6 +29,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def read_root():
     return FileResponse("templates/dashboard.html")
 
+@app.get("/consumibles", response_class=HTMLResponse)
+async def read_root():
+    return FileResponse("templates/consumibles.html")
+
 @app.get("/mapas", response_class=HTMLResponse)
 async def get_dashboard():
     return FileResponse("templates/mapas.html")
